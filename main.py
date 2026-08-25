@@ -5,23 +5,20 @@ import math
 
 pygame.init()
 
-# ------------------ KONFIGURASI ------------------
 CELL_SIZE = 30
 GRID_W, GRID_H = 20, 16
-SCREEN_W, SCREEN_H = CELL_SIZE * GRID_W, CELL_SIZE * GRID_H + 80  # +80 buat header konyol
+SCREEN_W, SCREEN_H = CELL_SIZE * GRID_W, CELL_SIZE * GRID_H + 80
 
-# Pilihan kecepatan (FPS) yang bisa dipilih di menu
 SPEED_OPTIONS = [
     ("Santai", 6),
     ("Normal", 10),
     ("Ngebut", 15),
     ("Gokil", 22),
 ]
-DEFAULT_SPEED_INDEX = 1  # "Normal"
+DEFAULT_SPEED_INDEX = 1
 
-# Warna-warna ceria
-BG_COLOR = (255, 248, 220)          # krem lembut
-HEADER_COLOR = (255, 105, 180)      # pink hot
+BG_COLOR = (255, 248, 220)
+HEADER_COLOR = (255, 105, 180)
 SNAKE_BODY_COLOR = (60, 200, 90)
 SNAKE_BODY_COLOR2 = (100, 230, 130)
 SNAKE_HEAD_COLOR = (30, 150, 60)
@@ -77,7 +74,7 @@ def random_food_pos(snake_body):
 
 class Game:
     def __init__(self):
-        self.state = "menu"  # "menu" -> "playing" -> "gameover"
+        self.state = "menu"
         self.menu_tagline = random.choice(FUNNY_MENU_TAGLINES)
         self.menu_wobble = 0
         self.speed_index = DEFAULT_SPEED_INDEX
@@ -128,7 +125,6 @@ class Game:
                 self.menu_tagline = random.choice(FUNNY_MENU_TAGLINES)
             return
 
-        # state == "playing"
         if event.key == pygame.K_w and self.direction != (0, 1):
             self.next_direction = (0, -1)
         elif event.key == pygame.K_s and self.direction != (0, -1):
@@ -151,7 +147,6 @@ class Game:
         dx, dy = self.direction
         new_head = (head_x + dx, head_y + dy)
 
-        # Cek nabrak tembok atau badan sendiri -> game over lucu
         if (
             new_head[0] < 0 or new_head[0] >= GRID_W
             or new_head[1] < 0 or new_head[1] >= GRID_H
@@ -205,7 +200,6 @@ class Game:
             pygame.draw.rect(screen, color, rect, border_radius=10)
 
             if i == 0:
-                # gambar wajah lucu di kepala
                 cx = x * CELL_SIZE + CELL_SIZE // 2
                 cy = 80 + y * CELL_SIZE + CELL_SIZE // 2 + wob
                 eye_offset = 6
@@ -213,7 +207,6 @@ class Game:
                 pygame.draw.circle(screen, (255, 255, 255), (cx + eye_offset, cy - 4), 4)
                 pygame.draw.circle(screen, (0, 0, 0), (cx - eye_offset, cy - 4), 2)
                 pygame.draw.circle(screen, (0, 0, 0), (cx + eye_offset, cy - 4), 2)
-                # mulut senyum konyol
                 if not self.game_over:
                     pygame.draw.arc(
                         screen, (0, 0, 0),
@@ -250,7 +243,6 @@ class Game:
     def draw_menu(self):
         screen.fill(BG_COLOR)
 
-        # dekorasi ular goyang-goyang di menu
         deco_y = 120
         for i in range(8):
             wob = int(10 * math.sin(self.menu_wobble * 0.1 + i * 0.6))
@@ -271,7 +263,6 @@ class Game:
         tagline = FONT_SMALL.render(self.menu_tagline, True, TEXT_COLOR)
         screen.blit(tagline, tagline.get_rect(center=(SCREEN_W // 2, deco_y + 140)))
 
-        # tombol "mulai"
         play_color = (60, 200, 90)
         btn_w, btn_h = 260, 60
         btn_rect = pygame.Rect(0, 0, btn_w, btn_h)
@@ -280,7 +271,6 @@ class Game:
         play_txt = FONT_MED.render("SPASI untuk Main!", True, (255, 255, 255))
         screen.blit(play_txt, play_txt.get_rect(center=btn_rect.center))
 
-        # ---- pemilih kecepatan ----
         speed_label_y = deco_y + 285
         speed_name, speed_fps = SPEED_OPTIONS[self.speed_index]
         speed_title = FONT_SMALL.render("Kecepatan Ular (panah kiri/kanan)", True, TEXT_COLOR)
